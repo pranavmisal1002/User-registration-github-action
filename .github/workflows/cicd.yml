@@ -1,0 +1,33 @@
+name: Maven Build and Deploy to Nexus
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 and Configure Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          server-id: nexus-releases
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
+
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+
+      - name: Build Project
+        run: mvn clean package
+
+      - name: Deploy Artifact to Nexus
+        run: mvn deploy
