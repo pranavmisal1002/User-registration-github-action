@@ -27,7 +27,7 @@ jobs:
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
       - name: Build Project
-        run: mvn clean package
+        run: mvn clean package -DskipTests
 
       - name: Deploy Artifact to Nexus
         run: mvn deploy
